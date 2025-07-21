@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 
+/**
+ * REST controller for user-related operations.
+ */
 @CrossOrigin("http://localhost:5173")
 @RestController
 @RequestMapping("/api/users")
@@ -18,11 +21,13 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**Endpoint for testing controller is working*/
     @GetMapping("/test")
     public String test() {
         return "UserController is working";
     }
 
+    /**Registers a new user*/
     @PostMapping("register")
     public void registerUser(@RequestBody User user) throws SQLException {
         userService.registerUser(user);
