@@ -89,7 +89,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>11.7.2</version>
                 <configuration>
-                    <url>jdbc:mysql://localhost:3306/cryptoapptest?createDatabaseIfNotExist=true</url>
+                    <url>jdbc:mysql://localhost:3306/crypto-trading-sim?createDatabaseIfNotExist=true</url>
                     <user>root</user>
                     <password>yoursqlpassword</password>
                     <cleanDisabled>false</cleanDisabled>
