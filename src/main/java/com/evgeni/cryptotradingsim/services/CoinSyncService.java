@@ -10,24 +10,37 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+//Todo: remove debug prints in production code
+
+/**
+ * Service for synchronizing and caching the top 20 cryptocurrencies
+ * available on both CoinGecko and Kraken (USD pairs).
+ */
 @Service
 @RequiredArgsConstructor
 public class CoinSyncService {
+    /**RestTemplate for making HTTP requests to external APIs.*/
     private final RestTemplate restTemplate = new RestTemplate();
 
+    /**Maps CoinGecko symbols to Kraken symbols where they differ.*/
     private final Map<String, String> krakenAliasMap = Map.of(
             "btc", "XBT",
-            "eth", "ETH",
             "doge", "XDG"
     );
 
+    /**Cached list of the top 20 coins, available on both exchanges*/
     private volatile List<CoinDto> cachedTop20 = List.of();
 
+    /**Returns the cached list of the top 20 coins.*/
     public List<CoinDto> getTop20Coins() {
         return cachedTop20;
     }
 
-//    @PostConstruct
+    /**
+     * Scheduled task to fetch and cache the top 20 coins every 15 minutes.
+     * This method is called automatically after the application starts.
+     */
+    @PostConstruct
     @Scheduled(fixedRate = 15 * 60 * 1000) // 15 minutes
     public void syncTop20Coins() {
         try {
@@ -39,8 +52,14 @@ public class CoinSyncService {
         }
     }
 
+    /**
+     * Fetches the top 20 coins from CoinGecko and filters them based on
+     * availability on Kraken (USD pairs).
+     *
+     * @return List of CoinDto containing the top 20 coins.
+     */
     private List<CoinDto> fetchTop20Coins() {
-        String cgUrl = "https://api.coingecko.com/api/v3/coins/markets"+"" +
+        String cgUrl = "https://api.coingecko.com/api/v3/coins/markets" +
                 "?vs_currency=usd&order=market_cap_desc&per_page=30&page=1&sparkline=false";
 
         List<Map<String, Object>> cgList = Arrays.asList(restTemplate.getForObject(cgUrl, Map[].class));
@@ -56,11 +75,11 @@ public class CoinSyncService {
         Set<String> wsPairs = krakenPairs.values().stream()
                 .map(p -> (String) p.get("wsname"))
                 .filter(Objects::nonNull)
-                .filter(name -> name != null && name.endsWith("/USD"))
+                .filter(name -> name.endsWith("/USD"))
                 .collect(Collectors.toSet());
         System.out.println("[DEBUG] Kraken USD pairs: " + wsPairs.size());
         System.out.println("[DEBUG] First 5 Kraken USD pairs: " +
-                wsPairs.stream().limit(5).collect(Collectors.toList()));
+                wsPairs.stream().limit(5).toList());
 
 
         List<CoinDto> result = new ArrayList<>(20);

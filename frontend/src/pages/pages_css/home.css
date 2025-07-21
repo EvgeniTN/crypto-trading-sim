@@ -1,0 +1,17 @@
+.home-container{
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /*height: 100vh;*/
+    /*border: 1px solid blue;*/
+}
+
+.coinlist{
+    /*border: 1px solid red;*/
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    width: 50%;
+}

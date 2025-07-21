@@ -1,0 +1,20 @@
+.coincard-container {
+	display: flex;
+	justify-content: space-between;
+	text-align: center;
+	background-color: #121212;
+	color: white;
+}
+
+.coincard-content{
+	display: flex;
+	justify-content: space-around;
+	/*border: 1px solid white;*/
+	flex-basis: 50%;
+}
+
+p{
+	/*border: 1px solid salmon;*/
+	flex-basis: 33%;
+	padding: 1rem;
+}
