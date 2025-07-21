@@ -40,4 +40,26 @@ public class UserRepository {
             preparedStatement.executeUpdate();
         }
     }
+
+    /**
+     * Finds a user by username and password.
+     * @return User object if found, otherwise null
+     */
+    public User findByUsernameAndPassword(String username, String password) throws SQLException {
+        String sqlQuery = "SELECT * FROM users WHERE username = ? AND password = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            var resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                User user = new User();
+                user.setUsername(resultSet.getString("username"));
+                user.setPassword(resultSet.getString("password"));
+                user.setBalance(resultSet.getBigDecimal("balance"));
+                return user;
+            }
+            return null;
+        }
+    }
 }

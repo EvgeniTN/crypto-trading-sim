@@ -28,4 +28,12 @@ public class UserService {
         user.setBalance(new BigDecimal("10000.00"));
         userRepository.addUser(user);
     }
+
+    /**
+     * Authenticates a user by checking their username and password.
+     * @return User object if authentication is successful, otherwise null.
+     */
+    public User login(String email, String password) throws SQLException {
+        return userRepository.findByUsernameAndPassword(email, password);
+    }
 }

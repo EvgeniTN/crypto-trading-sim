@@ -1,10 +1,12 @@
 import React, {useState} from "react";
+import {useNavigate} from "react-router-dom";
 import "./pages_css/login.css";
 
 function Login() {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("")
 	const [message, setMessage] = useState("");
+	const navigate = useNavigate();
 
 	const handleRegister = async (e) => {
 		e.preventDefault();
@@ -25,6 +27,28 @@ function Login() {
 		}
 	};
 
+	const handleLogin = async (e) => {
+		e.preventDefault();
+		try {
+			const response = await fetch("http://localhost:8080/api/users/login", {
+				method: "POST",
+				headers: { "Content-type": "application/json" },
+				body: JSON.stringify({ username, password }),
+			});
+			if (response.ok) {
+				const user = await response.json();
+				localStorage.setItem("user", JSON.stringify(user))
+				setMessage("login success");
+				navigate("/home")
+			} else {
+				const text = await response.text()
+				setMessage(text);
+			}
+		} catch (err) {
+			setMessage("login failed: " + err);
+		}
+	};
+
 	return (
 		<>
 			<div className="login-container">
@@ -41,7 +65,7 @@ function Login() {
 						   onChange={e => setPassword(e.target.value)}
 					/>
 					<div className="btn-container">
-						<button type="submit">Login</button>
+						<button type="submit" onClick={handleLogin}>Login</button>
 						<button type="button" onClick={handleRegister}>
 							Register
 						</button>
