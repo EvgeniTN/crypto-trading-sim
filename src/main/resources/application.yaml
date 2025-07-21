@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: crypto-trading-sim
+  datasource:
+    url: jdbc:mysql://localhost:3306/cryptoapptest?createDatabaseIfNotExist=true
+    user: root
+    password: yoursqlpassword
