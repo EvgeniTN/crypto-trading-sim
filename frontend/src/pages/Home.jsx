@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CoinCard from "../components/CoinCard";
 import "./pages_css/home.css";
 
@@ -14,14 +14,16 @@ function Home() {
 	const wsnameToKrakenKey = {
 		"XBT/USD": "BTC/USD",
 		"XDG/USD": "DOGE/USD",
-	}
+	};
 
 	useEffect(() => {
 		fetch(coinApiUrl)
 			.then((response) => response.json())
 			.then((data) => {
 				setCoins(data);
-				const krakenSymbols = data.map((coin) => wsnameToKrakenKey[coin.krakenSymbol] || coin.krakenSymbol);
+				const krakenSymbols = data.map(
+					(coin) => wsnameToKrakenKey[coin.krakenSymbol] || coin.krakenSymbol
+				);
 				console.log("[SUBSCRIBE] Symbols:", krakenSymbols);
 
 				const ws = new WebSocket(krakenWsUrl);
@@ -41,7 +43,7 @@ function Home() {
 
 				ws.onmessage = (event) => {
 					const msg = JSON.parse(event.data);
-					if (msg.channel === "ticker" && msg.data){
+					if (msg.channel === "ticker" && msg.data) {
 						setPrices((prev) => ({
 							...prev,
 							[msg.data[0].symbol]: parseFloat(msg.data[0].last),
@@ -55,13 +57,12 @@ function Home() {
 				ws.onclose = () => {
 					console.log("WebSocket closed");
 				};
-
 			})
 			.catch((error) => {
 				console.error("Error fetching coins:", error);
 			});
 
-		return() => {
+		return () => {
 			if (wsRef.current) {
 				wsRef.current.close();
 			}
@@ -80,8 +81,16 @@ function Home() {
 			)}
 			<div className="coinlist">
 				<div className="coinlist-header">
-					<div>name, symbol, price</div>
-					<div>Actions</div>
+					<div className="coinlist-header-labels">
+						<p>Name</p>
+						<p>Symbol</p>
+						<p>Price</p>
+					</div>
+					<div className="coinlist-header-labels">
+						<p>Holdings</p>
+						<p>Value</p>
+						<p></p>
+					</div>
 				</div>
 				{coins.map((coin) => {
 					const key = wsnameToKrakenKey[coin.krakenSymbol] || coin.krakenSymbol;
@@ -95,6 +104,7 @@ function Home() {
 						/>
 					);
 				})}
+				{/* <CoinCard symbol="BTC" name="Bitcoin" price="$101203.31" holdings="2.342" /> */}
 			</div>
 		</div>
 	);

@@ -6,15 +6,119 @@
 	color: white;
 }
 
-.coincard-content{
+.coincard-content {
 	display: flex;
 	justify-content: space-around;
-	/*border: 1px solid white;*/
 	flex-basis: 50%;
 }
 
-p{
+.coincard-content p {
 	/*border: 1px solid salmon;*/
 	flex-basis: 33%;
 	padding: 1rem;
+}
+
+.coincard-actions {
+	flex-basis: 50%;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.coincard-actions > * {
+	flex-basis: 33%;
+}
+
+.dropdown-header {
+	display: flex;
+	/* border: 1px solid salmon; */
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.dropdown-header button {
+	width: 100%;
+	padding: 1rem;
+	border: none;
+	border-bottom: 3px solid #323232;
+	background-color: #121212;
+	font-size: large;
+	color: white;
+	transition: all .3s ease-in-out;
+}
+
+.dropdown-header button:hover {
+	background-color: #323232;
+	color: aqua;
+}
+
+.dropdown-header button.active {
+	border-bottom: 3px solid aqua;
+}
+
+.dropdown-button {
+	background: none;
+	color: gray;
+	border: none;
+	flex-grow: 1;
+	height: 100%;
+	transition: all 0.2s ease-in-out;
+}
+
+.dropdown-button:hover {
+	color: aqua;
+}
+
+.dropdown-menu {
+	background-color: #121212;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.transaction-form {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	padding: 3rem;
+}
+
+.transaction-form input {
+	padding: 1rem 2rem;
+	margin-bottom: 1rem;
+	border: none;
+	border-radius: 5px;
+	color: white;
+	background-color: rgba(255, 255, 255, 0.068);
+}
+
+.transaction-form button {
+	padding: 1rem 2rem;
+	border: none;
+	border-radius: 5px;
+	color: white;
+	font-size: 1rem;
+	font-weight: bold;
+	transition: all .3s ease-in-out;
+}
+
+.buy-button {
+	background-color: green;
+}
+
+.buy-button:hover {
+	padding: 1rem 3rem;
+	background-color: darkgreen;
+}
+
+.sell-button {
+	background-color: darkred;
+}
+
+.sell-button:hover {
+	padding: 1rem 3rem;
+	background-color: red;
 }
