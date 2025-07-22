@@ -1,11 +1,17 @@
 package com.evgeni.cryptotradingsim.services;
 
+import com.evgeni.cryptotradingsim.entities.Holding;
+import com.evgeni.cryptotradingsim.entities.Transaction;
 import com.evgeni.cryptotradingsim.entities.User;
+import com.evgeni.cryptotradingsim.repositories.HoldingRepository;
+import com.evgeni.cryptotradingsim.repositories.TransactionRepository;
 import com.evgeni.cryptotradingsim.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
@@ -36,4 +42,18 @@ public class UserService {
     public User login(String email, String password) throws SQLException {
         return userRepository.findByUsernameAndPassword(email, password);
     }
+
+//    public void executeBuy(Transaction transaction, Holding holding) throws SQLException {
+//        try(Connection connection = userRepository.getConnection()) {
+//            try {
+//                connection.setAutoCommit(false);
+//                new TransactionRepository().insertTransaction(transaction, connection);
+//                new HoldingRepository().saveOrUpdateHolding(holding, connection);
+//                connection.commit();
+//            } catch (Exception e) {
+//                connection.rollback();
+//                throw e;
+//            }
+//        }
+//    }
 }

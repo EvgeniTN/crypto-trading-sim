@@ -54,12 +54,22 @@ public class UserRepository {
             var resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 User user = new User();
+                user.setId(resultSet.getLong("id"));
                 user.setUsername(resultSet.getString("username"));
                 user.setPassword(resultSet.getString("password"));
                 user.setBalance(resultSet.getBigDecimal("balance"));
                 return user;
             }
             return null;
+        }
+    }
+
+    public void updateUserBalance(User user, Connection connection) throws SQLException {
+        String sql = "UPDATE users SET balance = ? WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setBigDecimal(1, user.getBalance());
+            stmt.setLong(2, user.getId());
+            stmt.executeUpdate();
         }
     }
 }
