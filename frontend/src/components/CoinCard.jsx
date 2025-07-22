@@ -1,38 +1,66 @@
 import React, { useState } from "react";
 import "./component_css/coin_card.css";
 
-function CoinCard({ name, symbol, price, holdings }) {
+function CoinCard({ name, symbol, price, holdings, onTransaction }) {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [isBuying, setIsBuying] = useState(true);
 	const [quantity, setQuantity] = useState(0);
+	const [usdAmount, setUsdAmount] = useState(0);
+	const [message, setMessage] = useState("");
+
+	const numericPrice = parseFloat(price.replace(/[$,]/g, ""));
+
+	const handleQuantityChange = (e) => {
+		const qty = e.target.value;
+		setQuantity(qty);
+		setUsdAmount(qty * numericPrice);
+	};
+
+	const handleUsdAmountChange = (e) => {
+		const usd = e.target.value;
+		setUsdAmount(usd);
+		setQuantity(numericPrice ? usd / numericPrice : 0);
+	};
+
 	const handleBuy = async (e) => {
 		e.preventDefault();
-		const user = JSON.parse(localStorage.getItem("user"));
-		console.log(user)
-		const numericPrice = parseFloat(price.replace(/[$,]/g, ""));
-		const buyQuantity = parseFloat(quantity);
-		const payload = {
-			transaction:{
-				user: user,
-				symbol: symbol,
-				price: numericPrice,
-				quantity: buyQuantity,
-				buy: true,
-				total: numericPrice * buyQuantity,
-				profit_loss: 0,
-			},
-			holding:{
-				user: user,
-				symbol: symbol,
-				quantity: (parseFloat(holdings) || 0) + buyQuantity,
+		try {
+			const user = JSON.parse(localStorage.getItem("user"));
+			console.log(user);
+			const buyQuantity = parseFloat(quantity);
+
+			if (user.balance < numericPrice * buyQuantity) {
+				setMessage("Insufficient balance for this transaction.");
+				return;
 			}
-		};
-		await fetch("http://localhost:8080/api/trade/buy", {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(payload)
-		});
-	}
+
+			const payload = {
+				transaction: {
+					user: user,
+					symbol: symbol,
+					price: numericPrice,
+					quantity: buyQuantity,
+					buy: true,
+					total: numericPrice * buyQuantity,
+					profit_loss: 0,
+				},
+				holding: {
+					user: user,
+					symbol: symbol,
+					quantity: (parseFloat(holdings) || 0) + buyQuantity,
+				},
+			};
+			await fetch("http://localhost:8080/api/trade/buy", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			});
+			if (onTransaction) onTransaction();
+			setMessage("Transaction successful!");
+		} catch (error) {
+			console.error("Error during buy transaction:", error);
+		}
+	};
 
 	return (
 		<>
@@ -45,7 +73,7 @@ function CoinCard({ name, symbol, price, holdings }) {
 					</div>
 					<div className="coincard-actions">
 						<p>
-							{holdings} {symbol}
+							{parseFloat(holdings).toPrecision(6)} {symbol}
 						</p>
 						<p>
 							{price
@@ -78,17 +106,22 @@ function CoinCard({ name, symbol, price, holdings }) {
 								Sell
 							</button>
 						</div>
-						<form className="transaction-form" onSubmit={isBuying ? handleBuy : undefined}>
+						<form
+							className="transaction-form"
+							onSubmit={isBuying ? handleBuy : undefined}
+						>
 							<label htmlFor="amount">Amount {symbol}</label>
 							<input
 								type="number"
-								name=""
-								id=""
 								value={quantity}
-								onChange={(e) => setQuantity(e.target.value)}
+								onChange={handleQuantityChange}
 							/>
 							<label htmlFor="">Amount USD</label>
-							<input type="number" name="" id="" />
+							<input
+								type="number"
+								value={usdAmount}
+								onChange={handleUsdAmountChange}
+							/>
 							{isBuying ? (
 								<button type="submit" className="buy-button">
 									Buy
@@ -98,6 +131,7 @@ function CoinCard({ name, symbol, price, holdings }) {
 									Sell
 								</button>
 							)}
+							{message && <p className="transaction-message">{message}</p>}
 						</form>
 					</div>
 				)}

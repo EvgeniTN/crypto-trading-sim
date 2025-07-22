@@ -49,4 +49,8 @@ public class UserService {
     public Map<String, BigDecimal> getHoldingsByUserId(User user) throws SQLException {
         return holdingRepository.retrieveHoldingsByUserId(user);
     }
+
+    public User getUserById(int id) throws SQLException {
+        return userRepository.findById(id);
+    }
 }

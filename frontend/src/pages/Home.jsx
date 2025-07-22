@@ -17,6 +17,12 @@ function Home() {
 		"XDG/USD": "DOGE/USD",
 	};
 
+	const handleTransactionComplete = async () => {
+		const res = await fetch(`http://localhost:8080/api/users/${user.id}`);
+		const updatedUser = await res.json();
+		localStorage.setItem("user", JSON.stringify(updatedUser));
+	};
+
 	const fetchHoldings = async () => {
 		fetch('http://localhost:8080/api/users/holdings', {
 			method: 'POST',
@@ -108,8 +114,9 @@ function Home() {
 							key={coin.krakenSymbol}
 							name={coin.name}
 							symbol={coin.symbol}
-							price={price ? `$${price.toFixed(2)}` : "Loading..."}
+							price={price ? `$${price}` : "Loading..."}
 							holdings={holding}
+							onTransaction={handleTransactionComplete}
 						/>
 					);
 				})}

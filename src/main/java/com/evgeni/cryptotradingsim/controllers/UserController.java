@@ -56,4 +56,14 @@ public class UserController {
         Map<String, BigDecimal> holdings = userService.getHoldingsByUserId(user);
         return ResponseEntity.ok(holdings);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable int id) throws SQLException {
+        User user = userService.getUserById(id);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
 }

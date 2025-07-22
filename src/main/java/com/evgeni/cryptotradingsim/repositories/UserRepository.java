@@ -72,4 +72,22 @@ public class UserRepository {
             stmt.executeUpdate();
         }
     }
+
+    public User findById(int id) throws SQLException {
+        String sqlQuery = "SELECT * FROM users WHERE id = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
+            preparedStatement.setInt(1, id);
+            var resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                User user = new User();
+                user.setId(resultSet.getLong("id"));
+                user.setUsername(resultSet.getString("username"));
+                user.setPassword(resultSet.getString("password"));
+                user.setBalance(resultSet.getBigDecimal("balance"));
+                return user;
+            }
+            return null;
+        }
+    }
 }
