@@ -11,15 +11,9 @@ function Home() {
 
 	const wsRef = useRef(null);
 
-	// const normalizeSymbol = (rawSymbol) => {
-	// 	return rawSymbol
-	// 		.replace(/^XBT/, "BTC")
-	// 		.replace(/^XDG/, "DOGE");
-	// }
-
 	const wsnameToKrakenKey = {
-		"XBT/USD": "XXBTZUSD",
-		"DOGE/USD": "XDGUSD",
+		"XBT/USD": "BTC/USD",
+		"XDG/USD": "DOGE/USD",
 	}
 
 	useEffect(() => {
@@ -48,17 +42,6 @@ function Home() {
 				ws.onmessage = (event) => {
 					const msg = JSON.parse(event.data);
 					if (msg.channel === "ticker" && msg.data){
-						const t = msg.data[0];
-						const symbol = t.symbol;
-						// const normalizedSymbol = normalizeSymbol(symbol);
-						const lastPrice = parseFloat(t.last);
-						// console.log(
-						// 	"[WS]",
-						// 	"rawSymbol:", t.symbol,
-						// 	"normalized:", normalizeSymbol(t.symbol),
-						// 	"last:", t.last
-						// );
-
 						setPrices((prev) => ({
 							...prev,
 							[msg.data[0].symbol]: parseFloat(msg.data[0].last),
@@ -103,10 +86,6 @@ function Home() {
 				{coins.map((coin) => {
 					const key = wsnameToKrakenKey[coin.krakenSymbol] || coin.krakenSymbol;
 					const price = prices[key];
-
-
-					// console.log("[RENDER]", coin.symbol, "→", coin.krakenSymbol, "→", displayKey, "→", price);
-
 					return (
 						<CoinCard
 							key={coin.krakenSymbol}
