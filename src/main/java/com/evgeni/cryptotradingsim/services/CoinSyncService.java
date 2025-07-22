@@ -22,12 +22,6 @@ public class CoinSyncService {
     /**RestTemplate for making HTTP requests to external APIs.*/
     private final RestTemplate restTemplate = new RestTemplate();
 
-    /**Maps CoinGecko symbols to Kraken symbols where they differ.*/
-    private final Map<String, String> krakenAliasMap = Map.of(
-            "btc", "XBT",
-            "doge", "XDG"
-    );
-
     /**Cached list of the top 20 coins, available on both exchanges*/
     private volatile List<CoinDto> cachedTop20 = List.of();
 
@@ -88,7 +82,7 @@ public class CoinSyncService {
             String id = (String) coin.get("id");
             String name = (String) coin.get("name");
             String symbol = ((String) coin.get("symbol")).toLowerCase();
-            String mapped = krakenAliasMap.getOrDefault(symbol, symbol).toUpperCase();
+            String mapped = symbol.toUpperCase();
             String krakenSymbol = mapped + "/USD";
 
             System.out.println("[DEBUG] Trying symbol: " + symbol + " → Kraken pair: " + krakenSymbol);
