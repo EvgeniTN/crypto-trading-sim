@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -50,11 +51,9 @@ public class UserController {
         }
     }
 
-//    @PostMapping("/executeBuy")
-//    public void executeBuy(@RequestBody Map<String, Object> payload) throws SQLException {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        Transaction transaction = objectMapper.convertValue(payload. get("transaction"), Transaction.class);
-//        Holding holding = objectMapper.convertValue(payload. get("holding"), Holding.class);
-//        userService.executeBuy(transaction, holding);
-//    }
+    @PostMapping("/holdings")
+    public ResponseEntity<Map<String, BigDecimal>> getHoldings(@RequestBody User user) throws SQLException {
+        Map<String, BigDecimal> holdings = userService.getHoldingsByUserId(user);
+        return ResponseEntity.ok(holdings);
+    }
 }

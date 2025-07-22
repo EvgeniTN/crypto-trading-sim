@@ -1,13 +1,14 @@
 package com.evgeni.cryptotradingsim.repositories;
 
 import com.evgeni.cryptotradingsim.entities.Holding;
+import com.evgeni.cryptotradingsim.entities.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Repository
 public class HoldingRepository {
@@ -45,5 +46,21 @@ public class HoldingRepository {
                 }
             }
         }
+    }
+
+    public Map<String, BigDecimal> retrieveHoldingsByUserId(User user) throws SQLException {
+        String sql = "SELECT symbol, quantity FROM holdings WHERE user_id = ?";
+        Map<String, BigDecimal> holdings = new HashMap<>();
+        try(Connection connection = getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setLong(1, user.getId());
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    holdings.put(resultSet.getString("symbol"),
+                            resultSet.getBigDecimal("quantity"));
+                }
+            }
+        }
+        return holdings;
     }
 }

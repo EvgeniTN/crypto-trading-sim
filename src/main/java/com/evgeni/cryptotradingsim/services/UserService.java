@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Map;
 
 /**
  * Service class for user-related business logic in the crypto trading simulation application.
@@ -21,10 +22,12 @@ import java.sql.SQLException;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final HoldingRepository holdingRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, HoldingRepository holdingRepository) {
         this.userRepository = userRepository;
+        this.holdingRepository = holdingRepository;
     }
 
     /**
@@ -43,17 +46,7 @@ public class UserService {
         return userRepository.findByUsernameAndPassword(email, password);
     }
 
-//    public void executeBuy(Transaction transaction, Holding holding) throws SQLException {
-//        try(Connection connection = userRepository.getConnection()) {
-//            try {
-//                connection.setAutoCommit(false);
-//                new TransactionRepository().insertTransaction(transaction, connection);
-//                new HoldingRepository().saveOrUpdateHolding(holding, connection);
-//                connection.commit();
-//            } catch (Exception e) {
-//                connection.rollback();
-//                throw e;
-//            }
-//        }
-//    }
+    public Map<String, BigDecimal> getHoldingsByUserId(User user) throws SQLException {
+        return holdingRepository.retrieveHoldingsByUserId(user);
+    }
 }
