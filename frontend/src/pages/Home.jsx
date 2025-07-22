@@ -21,19 +21,19 @@ function Home() {
 		const res = await fetch(`http://localhost:8080/api/users/${user.id}`);
 		const updatedUser = await res.json();
 		localStorage.setItem("user", JSON.stringify(updatedUser));
-		await fetchHoldings()
+		await fetchHoldings();
 	};
 
 	const fetchHoldings = async () => {
-		fetch('http://localhost:8080/api/users/holdings', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(user)
+		fetch("http://localhost:8080/api/users/holdings", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(user),
 		})
-			.then(res => res.json())
-			.then(data => setHoldings(data))
-			.catch(err => console.error("Error fetching holdings:", err));
-	}
+			.then((res) => res.json())
+			.then((data) => setHoldings(data))
+			.catch((err) => console.error("Error fetching holdings:", err));
+	};
 
 	const fetchCoins = async () => {
 		try {
@@ -54,10 +54,12 @@ function Home() {
 		wsRef.current = ws;
 
 		ws.onopen = () => {
-			ws.send(JSON.stringify({
-				method: "subscribe",
-				params: { channel: "ticker", symbol: krakenSymbols }
-			}));
+			ws.send(
+				JSON.stringify({
+					method: "subscribe",
+					params: { channel: "ticker", symbol: krakenSymbols },
+				})
+			);
 		};
 
 		ws.onmessage = (event) => {
@@ -85,15 +87,27 @@ function Home() {
 
 	return (
 		<div className="home-container">
-			Home
-			<br />
 			{user && (
-				<div>
-					Welcome, {user.username}!<br />
-					Balance: ${user.balance}
+				<div className="navbar">
+					<div className="user-info">
+						<p>
+							Welcome, <span>{user.username}</span>
+						</p>
+						<p>Balance: ${user.balance}</p>
+					</div>
+					<div className="navbar-actions">
+						<a href="" className="transaction-btn">
+							View Transactions
+						</a>
+						<button className="reset-btn">Reset Account</button>
+						<a href="" className="logout-btn">
+							Logout
+						</a>
+					</div>
 				</div>
 			)}
 			<div className="coinlist">
+				<h2>Coin list</h2>
 				<div className="coinlist-header">
 					<div className="coinlist-header-labels">
 						<p>Name</p>
@@ -121,12 +135,12 @@ function Home() {
 						/>
 					);
 				})}
-				<CoinCard
+				{/* <CoinCard
 					symbol="BTC"
 					name="Bitcoin"
 					price="$101203.31"
 					holdings="2.342"
-				/>
+				/> */}
 			</div>
 		</div>
 	);

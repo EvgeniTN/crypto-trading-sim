@@ -8,6 +8,63 @@
 	/*border: 1px solid blue;*/
 }
 
+.navbar {
+	/* border: 1px solid saddlebrown; */
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1rem;
+}
+
+.navbar-actions {
+	flex-basis: 40%;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.navbar span {
+	color: aqua;
+}
+
+.logout-btn {
+	text-decoration: none;
+	color: white;
+	padding: 0.5rem 1.5rem;
+	border: 2px solid white;
+	border-radius: 100px;
+	transition: all 0.2s ease-in-out;
+}
+
+.logout-btn:hover {
+	color: aqua;
+	border: 2px solid aqua;
+}
+
+.reset-btn {
+	color: white;
+	background-color: darkred;
+	border: 2px solid darkred;
+	border-radius: 100px;
+	padding: 0.5rem 1.5rem;
+	font-size: medium;
+}
+
+.reset-btn:hover {
+	background-color: rgb(85, 0, 0);
+	border: 2px solid rgb(85, 0, 0);
+}
+
+.transaction-btn {
+	color: white;
+}
+
+.transaction-btn:hover {
+	color: aqua;
+}
+
 .coinlist {
 	/*border: 1px solid red;*/
 	display: flex;
@@ -16,8 +73,13 @@
 	width: 50%;
 }
 
+.coinlist h2 {
+	margin-top: 2rem;
+	text-align: center;
+}
+
 .coinlist-header {
-	margin-top: 3rem;
+	margin-top: 1rem;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
