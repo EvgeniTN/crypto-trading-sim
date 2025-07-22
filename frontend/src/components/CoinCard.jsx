@@ -26,11 +26,17 @@ function CoinCard({ name, symbol, price, holdings, onTransaction }) {
 		e.preventDefault();
 		try {
 			const user = JSON.parse(localStorage.getItem("user"));
-			console.log(user);
-			const buyQuantity = parseFloat(quantity);
+			const buyUsdAmount = parseFloat(usdAmount);
+			const latestPrice = numericPrice;
+			const buyQuantity = buyUsdAmount / latestPrice;
 
-			if (user.balance < numericPrice * buyQuantity) {
+			if (user.balance < buyUsdAmount) {
 				setMessage("Insufficient balance for this transaction.");
+				return;
+			}
+
+			if (buyQuantity <= 0 || buyUsdAmount <= 0) {
+				setMessage("Please enter a valid quantity.");
 				return;
 			}
 
