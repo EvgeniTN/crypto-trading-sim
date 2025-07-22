@@ -21,6 +21,7 @@ function Home() {
 		const res = await fetch(`http://localhost:8080/api/users/${user.id}`);
 		const updatedUser = await res.json();
 		localStorage.setItem("user", JSON.stringify(updatedUser));
+		await fetchHoldings()
 	};
 
 	const fetchHoldings = async () => {
