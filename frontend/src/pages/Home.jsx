@@ -1,20 +1,30 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CoinCard from "../components/CoinCard";
 import "./pages_css/home.css";
 
 function Home() {
 	const user = JSON.parse(localStorage.getItem("user"));
+
 	const coinApiUrl = "http://localhost:8080/api/coins/top20";
 	const krakenWsUrl = "wss://ws.kraken.com/v2";
+
 	const [coins, setCoins] = useState([]);
 	const [prices, setPrices] = useState({});
 	const [holdings, setHoldings] = useState({});
+
+	const navigate = useNavigate();
 
 	const wsRef = useRef(null);
 
 	const wsnameToKrakenKey = {
 		"XBT/USD": "BTC/USD",
 		"XDG/USD": "DOGE/USD",
+	};
+
+	const handleLogout = () => {
+		localStorage.removeItem("user");
+		navigate("/");
 	};
 
 	const handleTransactionComplete = async () => {
@@ -100,9 +110,7 @@ function Home() {
 							View Transactions
 						</a>
 						<button className="reset-btn">Reset Account</button>
-						<a href="" className="logout-btn">
-							Logout
-						</a>
+						<button className="logout-btn" onClick={handleLogout}>Logout</button>
 					</div>
 				</div>
 			)}
