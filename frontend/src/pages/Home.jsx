@@ -168,12 +168,6 @@ function Home() {
 						/>
 					);
 				})}
-				{/* <CoinCard
-					symbol="BTC"
-					name="Bitcoin"
-					price="$101203.31"
-					holdings="2.342"
-				/> */}
 			</div>
 		</div>
 	);

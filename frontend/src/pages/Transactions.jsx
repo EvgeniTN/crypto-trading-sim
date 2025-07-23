@@ -71,7 +71,6 @@ function Transactions() {
 							price={tx.price}
 							quantity={tx.quantity}
 							symbol={tx.symbol}
-							name={tx.name}
 							total={tx.total}
 							averagePrice={averagePrices[tx.symbol]}
 							timestamp={tx.timestamp}

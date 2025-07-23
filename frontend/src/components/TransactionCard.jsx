@@ -6,7 +6,6 @@ function TransactionCard({
 	price,
 	quantity,
 	symbol,
-	name,
 	total,
 	averagePrice,
 	timestamp,
@@ -17,7 +16,6 @@ function TransactionCard({
 	return (
 		<>
 			<div className="small-card">
-				<p>{name}</p>
 				<p>{symbol}</p>
 				<p>{buy ? "Buy" : "Sell"}</p>
 				<p>{total}</p>
@@ -34,11 +32,6 @@ function TransactionCard({
 						<div className="info-row">
 							<p>Type</p>
 							<p>{buy ? "Buy" : "Sell"}</p>
-						</div>
-						<hr />
-						<div className="info-row">
-							<p>Name</p>
-							<p>{name}</p>
 						</div>
 						<hr />
 						<div className="info-row">
