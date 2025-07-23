@@ -3,6 +3,7 @@ package com.evgeni.cryptotradingsim.services;
 import com.evgeni.cryptotradingsim.entities.Holding;
 import com.evgeni.cryptotradingsim.entities.Transaction;
 import com.evgeni.cryptotradingsim.entities.User;
+import com.evgeni.cryptotradingsim.repositories.HoldingRepository;
 import com.evgeni.cryptotradingsim.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,14 @@ public class TradeService {
     private final TransactionService transactionService;
     private final HoldingService holdingService;
     private final UserRepository userRepository;
+    private final HoldingRepository holdingRepository;
 
     @Autowired
-    public TradeService(TransactionService transactionService, HoldingService holdingService, UserRepository userRepository) {
+    public TradeService(TransactionService transactionService, HoldingService holdingService, UserRepository userRepository, HoldingRepository holdingRepository) {
         this.transactionService = transactionService;
         this.holdingService = holdingService;
         this.userRepository = userRepository;
+        this.holdingRepository = holdingRepository;
     }
 
     public void executeBuy(Transaction transaction, Holding holding) throws SQLException {
@@ -56,4 +59,45 @@ public class TradeService {
             }
         }
     }
+
+    public void executeSell(Transaction transaction, Holding holding) throws SQLException {
+        try (Connection connection = userRepository.getConnection()) {
+            try{
+                connection.setAutoCommit(false);
+                User user = transaction.getUser();
+                BigDecimal totalCost = transaction.getPrice().multiply(transaction.getQuantity());
+                BigDecimal epsilon = new BigDecimal("0.000001");
+
+                BigDecimal actualHoldings = holdingRepository.retrieveHoldingsByUserId(user).getOrDefault(transaction.getSymbol(), BigDecimal.ZERO);
+                BigDecimal newHoldings = actualHoldings.subtract(transaction.getQuantity());
+
+                if (newHoldings.add(epsilon).compareTo(BigDecimal.ZERO) < 0 &&
+                        newHoldings.abs().compareTo(epsilon) > 0){
+                    throw new IllegalArgumentException("Insufficient holdings for the transaction.");
+                }
+
+                if (newHoldings.compareTo(BigDecimal.ZERO) < 0 && newHoldings.abs().compareTo(epsilon) <= 0) {
+                    newHoldings = BigDecimal.ZERO;
+                }
+
+                user.setBalance(user.getBalance().add(totalCost).setScale(6, RoundingMode.HALF_UP));
+                holding.setQuantity(newHoldings.setScale(6, RoundingMode.HALF_UP));
+                userRepository.updateUserBalance(user, connection);
+
+                if (transaction.getTimestamp() == null) {
+                    transaction.setTimestamp(LocalDateTime.now());
+                }
+
+                transactionService.saveTransaction(transaction, connection);
+                holdingService.saveOrUpdateHolding(holding, connection);
+
+                connection.commit();
+            } catch (Exception e) {
+                connection.rollback();
+                throw e;
+            }
+        }
+    }
+
+
 }

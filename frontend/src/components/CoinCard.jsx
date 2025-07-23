@@ -27,8 +27,7 @@ function CoinCard({ name, symbol, price, holdings, onTransaction }) {
 		try {
 			const user = JSON.parse(localStorage.getItem("user"));
 			const buyUsdAmount = parseFloat(usdAmount);
-			const latestPrice = numericPrice;
-			const buyQuantity = buyUsdAmount / latestPrice;
+			const buyQuantity = buyUsdAmount / numericPrice;
 
 			if (user.balance < buyUsdAmount) {
 				setMessage("Insufficient balance for this transaction.");
@@ -67,6 +66,58 @@ function CoinCard({ name, symbol, price, holdings, onTransaction }) {
 			console.error("Error during buy transaction:", error);
 		}
 	};
+
+	const handleSell = async (e) => {
+		e.preventDefault();
+		try{
+			const user = JSON.parse(localStorage.getItem("user"));
+			const sellUsdAmount = parseFloat(usdAmount);
+			const sellQuantity = sellUsdAmount / numericPrice;
+			const epsilon = 0.000001;
+
+			if((parseFloat(holdings) || 0) - sellQuantity < -epsilon){
+				setMessage("Insufficient holdings for this transaction.");
+				return;
+			}
+
+			if(sellQuantity <= 0 || sellUsdAmount <= 0){
+				setMessage("Please enter a valid quantity.");
+				return;
+			}
+
+			const newHoldings =
+				Math.abs((parseFloat(holdings) || 0) - sellQuantity) <= epsilon
+					? 0
+					: (parseFloat(holdings) || 0) - sellQuantity;
+
+			const payload = {
+				transaction: {
+					user: user,
+					symbol: symbol,
+					price: numericPrice,
+					quantity: sellQuantity,
+					buy: false,
+					total: numericPrice * sellQuantity,
+					profit_loss: 0,
+				},
+				holding: {
+					user: user,
+					symbol: symbol,
+					quantity: newHoldings,
+				},
+			};
+			await fetch("http://localhost:8080/api/trade/sell", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(payload),
+			});
+			if (onTransaction) onTransaction();
+			setMessage("Transaction successful!");
+		} catch (error) {
+			console.error("Error during sell transaction:", error);
+			setMessage("Transaction failed. Please try again.");
+		}
+	}
 
 	return (
 		<>
@@ -114,7 +165,7 @@ function CoinCard({ name, symbol, price, holdings, onTransaction }) {
 						</div>
 						<form
 							className="transaction-form"
-							onSubmit={isBuying ? handleBuy : undefined}
+							onSubmit={isBuying ? handleBuy : handleSell}
 						>
 							<label htmlFor="amount">Amount {symbol}</label>
 							<input

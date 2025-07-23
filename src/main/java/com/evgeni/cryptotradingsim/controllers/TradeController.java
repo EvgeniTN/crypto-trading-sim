@@ -28,4 +28,12 @@ public class TradeController {
         Holding holding = objectMapper.convertValue(payload.get("holding"), Holding.class);
         tradeService.executeBuy(transaction, holding);
     }
+
+    @PostMapping("/sell")
+    public void executeSell(@RequestBody Map<String, Object> payload) throws SQLException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Transaction transaction = objectMapper.convertValue(payload.get("transaction"), Transaction.class);
+        Holding holding = objectMapper.convertValue(payload.get("holding"), Holding.class);
+        tradeService.executeSell(transaction, holding);
+    }
 }
