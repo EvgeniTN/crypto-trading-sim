@@ -30,18 +30,20 @@ public class HoldingRepository {
             selectStatement.setString(2, holding.getSymbol());
             var resultSet = selectStatement.executeQuery();
             if (resultSet.next()) {
-                String updateSql = "UPDATE holdings SET quantity = ? WHERE id = ?";
+                String updateSql = "UPDATE holdings SET quantity = ?, average_price = ? WHERE id = ?";
                 try (PreparedStatement updateStatement = connection.prepareStatement(updateSql)) {
                     updateStatement.setBigDecimal(1, holding.getQuantity());
-                    updateStatement.setLong(2, resultSet.getLong("id"));
+                    updateStatement.setBigDecimal(2, holding.getAveragePrice());
+                    updateStatement.setLong(3, resultSet.getLong("id"));
                     updateStatement.executeUpdate();
                 }
             } else {
-                String insertSql = "INSERT INTO holdings (symbol, quantity, user_id) VALUES (?, ?, ?)";
+                String insertSql = "INSERT INTO holdings (symbol, quantity, user_id, average_price) VALUES (?, ?, ?, ?)";
                 try (PreparedStatement insertStatement = connection.prepareStatement(insertSql)) {
                     insertStatement.setString(1, holding.getSymbol());
                     insertStatement.setBigDecimal(2, holding.getQuantity());
                     insertStatement.setLong(3, holding.getUser().getId());
+                    insertStatement.setBigDecimal(4, holding.getAveragePrice());
                     insertStatement.executeUpdate();
                 }
             }
@@ -62,5 +64,25 @@ public class HoldingRepository {
             }
         }
         return holdings;
+    }
+
+    public Holding findHoldingByUserAndSymbol(User user, String symbol, Connection connection) throws SQLException {
+        String sql = "SELECT id, symbol, quantity, average_price FROM holdings WHERE user_id = ? AND symbol = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, user.getId());
+            statement.setString(2, symbol);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    Holding holding = new Holding();
+                    holding.setId(resultSet.getLong("id"));
+                    holding.setSymbol(resultSet.getString("symbol"));
+                    holding.setQuantity(resultSet.getBigDecimal("quantity"));
+                    holding.setAveragePrice(resultSet.getBigDecimal("average_price"));
+                    holding.setUser(user);
+                    return holding;
+                }
+            }
+        }
+        return null; // Return null if no holding is found
     }
 }

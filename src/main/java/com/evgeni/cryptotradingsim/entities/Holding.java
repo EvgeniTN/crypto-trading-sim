@@ -10,4 +10,5 @@ public class Holding {
     private String symbol;
     private BigDecimal quantity;
     private User user;
+    private BigDecimal averagePrice;
 }

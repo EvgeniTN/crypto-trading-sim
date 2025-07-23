@@ -49,6 +49,20 @@ public class TradeService {
                     transaction.setTimestamp(LocalDateTime.now());
                 }
 
+                Holding currentHolding = holdingService.getHoldingByUserAndSymbol(user, transaction.getSymbol(), connection);
+                BigDecimal currentQuantity = currentHolding != null && currentHolding.getQuantity() != null
+                        ? currentHolding.getQuantity() : BigDecimal.ZERO;
+                BigDecimal currentAveragePrice = currentHolding != null && currentHolding.getAveragePrice() != null
+                        ? currentHolding.getAveragePrice() : BigDecimal.ZERO;
+
+                BigDecimal newQuantity = currentQuantity.add(transaction.getQuantity());
+                BigDecimal newAveragePrice = (currentQuantity.multiply(currentAveragePrice)
+                        .add(transaction.getQuantity().multiply(transaction.getPrice())))
+                        .divide(newQuantity, 6, RoundingMode.HALF_UP);
+
+                holding.setQuantity(newQuantity);
+                holding.setAveragePrice(newAveragePrice);
+
                 transactionService.saveTransaction(transaction, connection);
                 holdingService.saveOrUpdateHolding(holding, connection);
 

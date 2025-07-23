@@ -13,7 +13,6 @@ public class Transaction {
     private BigDecimal price;
     private BigDecimal quantity;
     private BigDecimal total;
-    private BigDecimal profit_loss;
     private LocalDateTime timestamp;
     private User user;
     private String symbol;

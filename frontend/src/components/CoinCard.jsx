@@ -47,12 +47,11 @@ function CoinCard({ name, symbol, price, holdings, onTransaction }) {
 					quantity: buyQuantity,
 					buy: true,
 					total: numericPrice * buyQuantity,
-					profit_loss: 0,
 				},
 				holding: {
 					user: user,
 					symbol: symbol,
-					quantity: (parseFloat(holdings) || 0) + buyQuantity,
+					quantity: parseFloat(holdings) || 0,
 				},
 			};
 			await fetch("http://localhost:8080/api/trade/buy", {
@@ -98,7 +97,6 @@ function CoinCard({ name, symbol, price, holdings, onTransaction }) {
 					quantity: sellQuantity,
 					buy: false,
 					total: numericPrice * sellQuantity,
-					profit_loss: 0,
 				},
 				holding: {
 					user: user,

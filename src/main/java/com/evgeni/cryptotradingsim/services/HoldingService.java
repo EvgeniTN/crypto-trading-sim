@@ -1,6 +1,7 @@
 package com.evgeni.cryptotradingsim.services;
 
 import com.evgeni.cryptotradingsim.entities.Holding;
+import com.evgeni.cryptotradingsim.entities.User;
 import com.evgeni.cryptotradingsim.repositories.HoldingRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +18,9 @@ public class HoldingService {
 
     public void saveOrUpdateHolding(Holding holding, Connection connection) throws SQLException {
         holdingRepository.saveOrUpdateHolding(holding, connection);
+    }
+
+    public Holding getHoldingByUserAndSymbol(User user, String symbol, Connection connection) throws SQLException {
+        return holdingRepository.findHoldingByUserAndSymbol(user, symbol, connection);
     }
 }
