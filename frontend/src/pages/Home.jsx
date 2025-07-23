@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate , Link} from "react-router-dom";
 import CoinCard from "../components/CoinCard";
 import "./pages_css/home.css";
 
@@ -106,11 +106,13 @@ function Home() {
 						<p>Balance: ${user.balance}</p>
 					</div>
 					<div className="navbar-actions">
-						<a href="" className="transaction-btn">
+						<Link to="/transactions" className="transaction-btn">
 							View Transactions
-						</a>
+						</Link>
 						<button className="reset-btn">Reset Account</button>
-						<button className="logout-btn" onClick={handleLogout}>Logout</button>
+						<button className="logout-btn" onClick={handleLogout}>
+							Logout
+						</button>
 					</div>
 				</div>
 			)}

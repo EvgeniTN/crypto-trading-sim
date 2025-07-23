@@ -69,18 +69,18 @@ function CoinCard({ name, symbol, price, holdings, onTransaction }) {
 
 	const handleSell = async (e) => {
 		e.preventDefault();
-		try{
+		try {
 			const user = JSON.parse(localStorage.getItem("user"));
 			const sellUsdAmount = parseFloat(usdAmount);
 			const sellQuantity = sellUsdAmount / numericPrice;
 			const epsilon = 0.000001;
 
-			if((parseFloat(holdings) || 0) - sellQuantity < -epsilon){
+			if ((parseFloat(holdings) || 0) - sellQuantity < -epsilon) {
 				setMessage("Insufficient holdings for this transaction.");
 				return;
 			}
 
-			if(sellQuantity <= 0 || sellUsdAmount <= 0){
+			if (sellQuantity <= 0 || sellUsdAmount <= 0) {
 				setMessage("Please enter a valid quantity.");
 				return;
 			}
@@ -117,7 +117,7 @@ function CoinCard({ name, symbol, price, holdings, onTransaction }) {
 			console.error("Error during sell transaction:", error);
 			setMessage("Transaction failed. Please try again.");
 		}
-	}
+	};
 
 	return (
 		<>

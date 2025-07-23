@@ -1,0 +1,35 @@
+.transaction-card {
+	background-color: #121212;
+}
+
+.small-card {
+	display: flex;
+	justify-content: space-around;
+	background-color: #121212;
+}
+
+.small-card > * {
+	flex-basis: 20%;
+	padding: 1rem;
+}
+
+.transaction-card-content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.info-row {
+	/* border: 1px solid salmon; */
+	width: 90%;
+	display: flex;
+	justify-content: space-between;
+	padding: 1rem 0rem;
+}
+
+hr {
+	width: 90%;
+	border: 0;
+	border-top: 1px solid rgb(32, 32, 32);
+}

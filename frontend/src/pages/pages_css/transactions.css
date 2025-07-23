@@ -1,0 +1,25 @@
+.transaction-container {
+	color: white;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.transaction-list {
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	gap: 0.5rem;
+	width: 50%;
+	max-width: 500px;
+	min-width: 300px;
+}
+
+.home-btn {
+	color: white;
+}
+
+.home-btn:hover {
+	color: aqua;
+}
