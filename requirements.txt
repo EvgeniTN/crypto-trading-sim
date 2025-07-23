@@ -1,0 +1,1 @@
+Dependencies: (Java 21 SDK, MySql, Maven, Node.js)
