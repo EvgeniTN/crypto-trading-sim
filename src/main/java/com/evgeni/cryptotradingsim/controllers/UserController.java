@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -55,6 +57,25 @@ public class UserController {
     public ResponseEntity<Map<String, BigDecimal>> getHoldings(@RequestBody User user) throws SQLException {
         Map<String, BigDecimal> holdings = userService.getHoldingsByUserId(user);
         return ResponseEntity.ok(holdings);
+    }
+
+    @PostMapping("/average-price")
+    public ResponseEntity<BigDecimal> getAveragePrice(@RequestBody Map<String, Object> payload) throws SQLException {
+        ObjectMapper mapper = new ObjectMapper();
+        User user = mapper.convertValue(payload.get("user"), User.class);
+        String symbol = (String) payload.get("symbol");
+        BigDecimal avgPrice = userService.getAveragePriceByUserIdAndSymbol(user, symbol);
+        return ResponseEntity.ok(avgPrice);
+    }
+
+    @PostMapping("/transactions")
+    public ResponseEntity<List<Transaction>> getTransactions(@RequestBody User user) throws SQLException {
+        List<Transaction> transactions = userService.getTransactionsByUserId(user);
+        if (transactions != null && !transactions.isEmpty()) {
+            return ResponseEntity.ok(transactions);
+        } else {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
     }
 
     @GetMapping("/{id}")

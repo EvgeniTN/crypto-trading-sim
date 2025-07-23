@@ -3,5 +3,5 @@ spring:
     name: crypto-trading-sim
   datasource:
     url: jdbc:mysql://localhost:3306/crypto-trading-sim?createDatabaseIfNotExist=true
-    user: root
     password: yoursqlpassword
+    username: root

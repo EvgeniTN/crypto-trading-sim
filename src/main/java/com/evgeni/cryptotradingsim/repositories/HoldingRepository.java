@@ -14,7 +14,7 @@ import java.util.Map;
 public class HoldingRepository {
     @Value("${spring.datasource.url}")
     private String url;
-    @Value("${spring.datasource.user}")
+    @Value("${spring.datasource.username}")
     private String user;
     @Value("${spring.datasource.password}")
     private String password;
@@ -85,4 +85,20 @@ public class HoldingRepository {
         }
         return null; // Return null if no holding is found
     }
+
+    public BigDecimal retrieveAveragePriceByUserIdAndSymbol(User user, String symbol) throws SQLException {
+        String sql = "SELECT average_price FROM holdings WHERE user_id = ? AND symbol = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, user.getId());
+            statement.setString(2, symbol);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getBigDecimal("average_price");
+                }
+            }
+        }
+        return null;
+    }
+
 }

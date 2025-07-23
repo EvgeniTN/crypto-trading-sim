@@ -8,10 +8,11 @@ function TransactionCard({
 	symbol,
 	name,
 	total,
-	profit_loss,
+	averagePrice,
 	timestamp,
 }) {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
+	const profit_loss = (parseFloat(price) - parseFloat (averagePrice)) * quantity;
 
 	return (
 		<>
@@ -62,7 +63,7 @@ function TransactionCard({
 						<hr />
 						<div className="info-row">
 							<p>Profit/Loss</p>
-							<p>{buy ? "N/A" : profit_loss}</p>
+							<p>{buy ? "N/A" : "$ "+parseFloat(profit_loss).toFixed(6) }</p>
 						</div>
 						<hr />
 						<div className="info-row">

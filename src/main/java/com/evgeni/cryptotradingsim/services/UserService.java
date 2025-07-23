@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,11 +24,14 @@ import java.util.Map;
 public class UserService {
     private final UserRepository userRepository;
     private final HoldingRepository holdingRepository;
+    private final TransactionRepository transactionRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, HoldingRepository holdingRepository) {
+    public UserService(UserRepository userRepository, HoldingRepository holdingRepository,
+                       TransactionRepository transactionRepository) {
         this.userRepository = userRepository;
         this.holdingRepository = holdingRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     /**
@@ -52,5 +56,13 @@ public class UserService {
 
     public User getUserById(int id) throws SQLException {
         return userRepository.findById(id);
+    }
+
+    public List<Transaction> getTransactionsByUserId(User user) throws SQLException {
+        return transactionRepository.retrieveTransactionByUserId(user);
+    }
+
+    public BigDecimal getAveragePriceByUserIdAndSymbol(User user, String symbol) throws SQLException {
+        return holdingRepository.retrieveAveragePriceByUserIdAndSymbol(user, symbol);
     }
 }

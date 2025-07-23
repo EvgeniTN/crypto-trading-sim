@@ -5,6 +5,7 @@ import com.evgeni.cryptotradingsim.entities.User;
 import com.evgeni.cryptotradingsim.repositories.HoldingRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -22,5 +23,9 @@ public class HoldingService {
 
     public Holding getHoldingByUserAndSymbol(User user, String symbol, Connection connection) throws SQLException {
         return holdingRepository.findHoldingByUserAndSymbol(user, symbol, connection);
+    }
+
+    public BigDecimal getAveragePriceByUserIdAndSymbol(User user, String symbol) throws SQLException {
+        return holdingRepository.retrieveAveragePriceByUserIdAndSymbol(user, symbol);
     }
 }

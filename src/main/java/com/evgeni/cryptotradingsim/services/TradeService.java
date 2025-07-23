@@ -82,8 +82,12 @@ public class TradeService {
                 BigDecimal totalCost = transaction.getPrice().multiply(transaction.getQuantity());
                 BigDecimal epsilon = new BigDecimal("0.000001");
 
+                Holding currentHolding = holdingService.getHoldingByUserAndSymbol(user, transaction.getSymbol(), connection);
                 BigDecimal actualHoldings = holdingRepository.retrieveHoldingsByUserId(user).getOrDefault(transaction.getSymbol(), BigDecimal.ZERO);
                 BigDecimal newHoldings = actualHoldings.subtract(transaction.getQuantity());
+                BigDecimal currentAveragePrice = currentHolding != null && currentHolding.getAveragePrice() != null
+                        ? currentHolding.getAveragePrice() : BigDecimal.ZERO;
+
 
                 if (newHoldings.add(epsilon).compareTo(BigDecimal.ZERO) < 0 &&
                         newHoldings.abs().compareTo(epsilon) > 0){
@@ -96,6 +100,9 @@ public class TradeService {
 
                 user.setBalance(user.getBalance().add(totalCost).setScale(6, RoundingMode.HALF_UP));
                 holding.setQuantity(newHoldings.setScale(6, RoundingMode.HALF_UP));
+
+                holding.setAveragePrice(newHoldings.compareTo(BigDecimal.ZERO) == 0 ? BigDecimal.ZERO : currentAveragePrice);
+
                 userRepository.updateUserBalance(user, connection);
 
                 if (transaction.getTimestamp() == null) {

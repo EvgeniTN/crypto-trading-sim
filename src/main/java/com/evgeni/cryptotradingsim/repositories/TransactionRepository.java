@@ -1,18 +1,21 @@
 package com.evgeni.cryptotradingsim.repositories;
 
 import com.evgeni.cryptotradingsim.entities.Transaction;
+import com.evgeni.cryptotradingsim.entities.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class TransactionRepository {
     @Value("${spring.datasource.url}")
     private String url;
-    @Value("${spring.datasource.user}")
+    @Value("${spring.datasource.username}")
     private String user;
     @Value("${spring.datasource.password}")
     private String password;
@@ -34,5 +37,29 @@ public class TransactionRepository {
             preparedStatement.setString(7, transaction.getSymbol());
             preparedStatement.executeUpdate();
         }
+    }
+
+    public List<Transaction> retrieveTransactionByUserId(User user) throws SQLException {
+        String sql = "SELECT * FROM transactions WHERE user_id = ?";
+        List<Transaction> transactions = new ArrayList<>();
+        try (Connection connection = getConnection();
+             var preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, user.getId());
+           try (var rs = preparedStatement.executeQuery()) {
+               while (rs.next()) {
+                     Transaction transaction = new Transaction();
+                     transaction.setId(rs.getLong("id"));
+                     transaction.setBuy(rs.getBoolean("buy"));
+                     transaction.setPrice(rs.getBigDecimal("price"));
+                     transaction.setQuantity(rs.getBigDecimal("quantity"));
+                     transaction.setTotal(rs.getBigDecimal("total"));
+                     transaction.setTimestamp(rs.getTimestamp("timestamp").toLocalDateTime());
+                     transaction.setSymbol(rs.getString("symbol"));
+
+                     transactions.add(transaction);
+               }
+           }
+        }
+        return transactions;
     }
 }

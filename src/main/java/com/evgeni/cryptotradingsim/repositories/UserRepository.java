@@ -17,7 +17,7 @@ import java.sql.SQLException;
 public class UserRepository {
     @Value("${spring.datasource.url}")
     private String url;
-    @Value("${spring.datasource.user}")
+    @Value("${spring.datasource.username}")
     private String user;
     @Value("${spring.datasource.password}")
     private String password;
