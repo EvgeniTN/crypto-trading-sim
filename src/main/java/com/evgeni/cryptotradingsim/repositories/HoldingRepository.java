@@ -113,4 +113,14 @@ public class HoldingRepository {
         return null;
     }
 
+    /**Deletes all holdings for a specific user.*/
+    public void deleteHoldingsByUserId(User user) throws SQLException {
+        String sql = "DELETE FROM holdings WHERE user_id = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, user.getId());
+            statement.executeUpdate();
+        }
+    }
+
 }

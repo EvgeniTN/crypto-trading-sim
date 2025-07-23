@@ -69,4 +69,14 @@ public class UserService {
     public BigDecimal getAveragePriceByUserIdAndSymbol(User user, String symbol) throws SQLException {
         return holdingRepository.retrieveAveragePriceByUserIdAndSymbol(user, symbol);
     }
+
+    /**Updates a user's information in the database.*/
+    public User resetAccount(Long user_id) throws SQLException {
+        User user = userRepository.findById(user_id.intValue());
+        user.setBalance(new BigDecimal("10000.00"));
+        holdingRepository.deleteHoldingsByUserId(user);
+        transactionRepository.deleteHistoryByUserId(user);
+        userRepository.updateUser(user);
+        return user;
+    }
 }

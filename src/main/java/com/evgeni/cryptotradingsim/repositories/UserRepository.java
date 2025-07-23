@@ -92,4 +92,17 @@ public class UserRepository {
             return null;
         }
     }
+
+    /**Updates an existing user in the database.*/
+    public void updateUser(User user) throws SQLException {
+        String sqlQuery = "UPDATE users SET username = ?, password = ?, balance = ? WHERE id = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
+            preparedStatement.setString(1, user.getUsername());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setBigDecimal(3, user.getBalance());
+            preparedStatement.setLong(4, user.getId());
+            preparedStatement.executeUpdate();
+        }
+    }
 }

@@ -92,4 +92,11 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
     }
+
+    /**Endpoint for resetting a user's account*/
+    @PostMapping("/{id}/reset")
+    public ResponseEntity<User> resetAccount(@PathVariable Long id) throws SQLException {
+        User user = userService.resetAccount(id);
+        return ResponseEntity.ok(user);
+    }
 }

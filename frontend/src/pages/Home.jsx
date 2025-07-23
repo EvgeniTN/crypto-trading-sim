@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate , Link} from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import CoinCard from "../components/CoinCard";
 import "./pages_css/home.css";
 
@@ -32,6 +32,27 @@ function Home() {
 		const updatedUser = await res.json();
 		localStorage.setItem("user", JSON.stringify(updatedUser));
 		await fetchHoldings();
+	};
+
+	const handleResetAccount = async () => {
+		try {
+			const res = await fetch(
+				`http://localhost:8080/api/users/${user.id}/reset`,
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+				}
+			);
+			if (res.ok) {
+				const updatedUser = await res.json();
+				localStorage.setItem("user", JSON.stringify(updatedUser));
+				await fetchHoldings();
+			} else {
+				console.error("Failed to reset account");
+			}
+		} catch (error) {
+			console.error("Error resetting account:", error);
+		}
 	};
 
 	const fetchHoldings = async () => {
@@ -109,7 +130,9 @@ function Home() {
 						<Link to="/transactions" className="transaction-btn">
 							View Transactions
 						</Link>
-						<button className="reset-btn">Reset Account</button>
+						<button className="reset-btn" onClick={handleResetAccount}>
+							Reset Account
+						</button>
 						<button className="logout-btn" onClick={handleLogout}>
 							Logout
 						</button>

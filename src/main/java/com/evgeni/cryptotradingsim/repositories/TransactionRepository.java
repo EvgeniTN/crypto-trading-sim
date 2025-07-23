@@ -68,4 +68,14 @@ public class TransactionRepository {
         }
         return transactions;
     }
+
+    /**Deletes all transactions for a specific user from the 'transactions' table in the database.*/
+    public void deleteHistoryByUserId(User user) throws SQLException {
+        String sql = "DELETE FROM transactions WHERE user_id = ?";
+        try (Connection connection = getConnection();
+             var preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, user.getId());
+            preparedStatement.executeUpdate();
+        }
+    }
 }
