@@ -10,6 +10,10 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Repository class for managing holding entities in the database.
+ * Provides methods for database operations related to holdings.
+ */
 @Repository
 public class HoldingRepository {
     @Value("${spring.datasource.url}")
@@ -23,6 +27,11 @@ public class HoldingRepository {
         return DriverManager.getConnection(url, user, password);
     }
 
+    /**
+     * Saves or updates a holding in the 'holdings' table in the database.
+     * If the holding already exists for the user and symbol, it updates the quantity and average price.
+     * Otherwise, it inserts a new holding.
+    */
     public void saveOrUpdateHolding(Holding holding, Connection connection) throws SQLException {
         String selectSql = "SELECT id FROM holdings WHERE user_id = ? AND symbol = ?";
         try (PreparedStatement selectStatement = connection.prepareStatement(selectSql)) {
@@ -50,6 +59,7 @@ public class HoldingRepository {
         }
     }
 
+    /**Retrieves all holdings for a specific user.*/
     public Map<String, BigDecimal> retrieveHoldingsByUserId(User user) throws SQLException {
         String sql = "SELECT symbol, quantity FROM holdings WHERE user_id = ?";
         Map<String, BigDecimal> holdings = new HashMap<>();
@@ -66,6 +76,7 @@ public class HoldingRepository {
         return holdings;
     }
 
+    /**Retrieves a holding by user and symbol.*/
     public Holding findHoldingByUserAndSymbol(User user, String symbol, Connection connection) throws SQLException {
         String sql = "SELECT id, symbol, quantity, average_price FROM holdings WHERE user_id = ? AND symbol = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -86,6 +97,7 @@ public class HoldingRepository {
         return null; // Return null if no holding is found
     }
 
+    /**Retrieves the average price of a holding by user and symbol.*/
     public BigDecimal retrieveAveragePriceByUserIdAndSymbol(User user, String symbol) throws SQLException {
         String sql = "SELECT average_price FROM holdings WHERE user_id = ? AND symbol = ?";
         try (Connection connection = getConnection();

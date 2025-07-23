@@ -64,6 +64,7 @@ public class UserRepository {
         }
     }
 
+    /**Updates the balance of a user in the database.*/
     public void updateUserBalance(User user, Connection connection) throws SQLException {
         String sql = "UPDATE users SET balance = ? WHERE id = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -73,6 +74,7 @@ public class UserRepository {
         }
     }
 
+    /**Finds a user by their ID.*/
     public User findById(int id) throws SQLException {
         String sqlQuery = "SELECT * FROM users WHERE id = ?";
         try (Connection connection = getConnection();

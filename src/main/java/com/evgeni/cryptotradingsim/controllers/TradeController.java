@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLException;
 import java.util.Map;
 
+/**
+ * REST controller for trade-related operations.
+ */
 @CrossOrigin("http://localhost:5173")
 @RestController
 @RequestMapping("/api/trade")
@@ -21,6 +24,7 @@ public class TradeController {
         this.tradeService = tradeService;
     }
 
+    /**Executes a buy request*/
     @PostMapping("/buy")
     public void executeBuy(@RequestBody Map<String, Object> payload) throws SQLException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -29,6 +33,7 @@ public class TradeController {
         tradeService.executeBuy(transaction, holding);
     }
 
+    /**Executes a sell request*/
     @PostMapping("/sell")
     public void executeSell(@RequestBody Map<String, Object> payload) throws SQLException {
         ObjectMapper objectMapper = new ObjectMapper();

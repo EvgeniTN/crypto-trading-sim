@@ -8,6 +8,10 @@ import org.springframework.stereotype.Service;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Service class for handling transaction-related business logic in the crypto trading simulation application.
+ * It interacts with the TransactionRepository to perform database operations related to transactions.
+ */
 @Service
 public class TransactionService {
     private final TransactionRepository transactionRepository;
@@ -17,6 +21,7 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
     }
 
+    /**Saves a transaction to the database.*/
     public void saveTransaction(Transaction transaction, Connection connection) throws SQLException {
         transactionRepository.insertTransaction(transaction, connection);
     }

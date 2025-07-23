@@ -11,6 +11,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Repository class for managing transaction entities in the database.
+ * Provides methods for database operations related to transactions.
+ */
 @Repository
 public class TransactionRepository {
     @Value("${spring.datasource.url}")
@@ -24,6 +28,7 @@ public class TransactionRepository {
         return DriverManager.getConnection(url, user, password);
     }
 
+    /**Inserts a new transaction into the 'transactions' table in the database.*/
     public void insertTransaction(Transaction transaction, Connection connection) throws SQLException {
         String sqlQuery = "INSERT INTO transactions (buy, price, quantity, total, timestamp,"+
                 " user_id, symbol) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -39,6 +44,7 @@ public class TransactionRepository {
         }
     }
 
+    /**Retrieves a list of transactions for a specific user.*/
     public List<Transaction> retrieveTransactionByUserId(User user) throws SQLException {
         String sql = "SELECT * FROM transactions WHERE user_id = ?";
         List<Transaction> transactions = new ArrayList<>();

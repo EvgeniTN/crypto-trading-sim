@@ -42,6 +42,7 @@ public class UserController {
         userService.registerUser(user);
     }
 
+    /**Logs in a user with username and password*/
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) throws SQLException {
         User found = userService.login(user.getUsername(), user.getPassword());
@@ -53,12 +54,14 @@ public class UserController {
         }
     }
 
+    /**Loads user's holdings*/
     @PostMapping("/holdings")
     public ResponseEntity<Map<String, BigDecimal>> getHoldings(@RequestBody User user) throws SQLException {
         Map<String, BigDecimal> holdings = userService.getHoldingsByUserId(user);
         return ResponseEntity.ok(holdings);
     }
 
+    /**Loads the average price of user holdings for a specific symbol*/
     @PostMapping("/average-price")
     public ResponseEntity<BigDecimal> getAveragePrice(@RequestBody Map<String, Object> payload) throws SQLException {
         ObjectMapper mapper = new ObjectMapper();
@@ -68,6 +71,7 @@ public class UserController {
         return ResponseEntity.ok(avgPrice);
     }
 
+    /**Loads user's transactions*/
     @PostMapping("/transactions")
     public ResponseEntity<List<Transaction>> getTransactions(@RequestBody User user) throws SQLException {
         List<Transaction> transactions = userService.getTransactionsByUserId(user);
@@ -78,6 +82,7 @@ public class UserController {
         }
     }
 
+    /**Endpoint for retrieving a user by their id*/
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable int id) throws SQLException {
         User user = userService.getUserById(id);

@@ -50,18 +50,22 @@ public class UserService {
         return userRepository.findByUsernameAndPassword(email, password);
     }
 
+    /**Retrieves all holdings for a given user.*/
     public Map<String, BigDecimal> getHoldingsByUserId(User user) throws SQLException {
         return holdingRepository.retrieveHoldingsByUserId(user);
     }
 
+    /**Retrieves a user by their ID.*/
     public User getUserById(int id) throws SQLException {
         return userRepository.findById(id);
     }
 
+    /**Retrieves all transactions for a given user.*/
     public List<Transaction> getTransactionsByUserId(User user) throws SQLException {
         return transactionRepository.retrieveTransactionByUserId(user);
     }
 
+    /**Retrieves the avereage price for each holding of a user by their ID and symbol.*/
     public BigDecimal getAveragePriceByUserIdAndSymbol(User user, String symbol) throws SQLException {
         return holdingRepository.retrieveAveragePriceByUserIdAndSymbol(user, symbol);
     }

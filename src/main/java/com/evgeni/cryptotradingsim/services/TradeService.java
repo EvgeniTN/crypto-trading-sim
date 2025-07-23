@@ -12,10 +12,12 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
 
+/**
+ * Service class for handling trade-related business logic in the crypto trading simulation application.
+ * It manages buy and sell transactions, updates user balances, and maintains holdings.
+ */
 @Service
 public class TradeService {
     private final TransactionService transactionService;
@@ -31,6 +33,7 @@ public class TradeService {
         this.holdingRepository = holdingRepository;
     }
 
+    /**Executes a buy transaction for a user, updating their balance and holdings accordingly.*/
     public void executeBuy(Transaction transaction, Holding holding) throws SQLException {
         try (Connection connection = userRepository.getConnection()) {
             try{
@@ -74,6 +77,7 @@ public class TradeService {
         }
     }
 
+    /**Executes a sell transaction for a user, updating their balance and holdings accordingly.*/
     public void executeSell(Transaction transaction, Holding holding) throws SQLException {
         try (Connection connection = userRepository.getConnection()) {
             try{
